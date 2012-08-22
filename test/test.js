@@ -234,5 +234,18 @@ vows.describe('dg.js').addBatch({
         graph.subject('A').dependsOn('C');
       });
     }
+  },
+  "Having a graph with 4 nodes": {
+    topic: function() {
+      var graph = new DependencyGraph();
+      graph.subject('A','B');
+      graph.subject('B','C');
+      graph.subject('C','D');
+      graph.subject('D','F');
+      return graph;
+    },
+    "all should return all the nodes in the graph": function(graph) {
+      assert.equal(graph.all.length, 4);
+    }
   }
 }).run();
