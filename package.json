@@ -3,7 +3,7 @@
   "name": "dependency-foo",
   "description": "Serializable General Purpose Dependency Graph",
   "keywords": "Dependency, Tree, Graph, Nodes, Serializable",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "http://www.firebase.co",
   "repository": {
     "type": "git",
