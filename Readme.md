@@ -23,7 +23,7 @@ dependency-foo is a stupid-proof Node.js module that implements a simple Directe
 #### Declaring a Dependency between two nodes
 
     // The human has now a dependency to the air.
-    graph.subject('human').dependsOn('air');
+    graph.subject('human').dependOn('air');
 
 #### Checking Dependencies & Direction
 
@@ -100,13 +100,13 @@ Or assigning the `state` property.
 
 dependency-foo will check for cyclic dependencies in the input.
 
-	graph.subject('human').dependsOn('air');
-	graph.subject('air').dependsOn('human'); // this is illegal!
+	graph.subject('human').dependOn('air');
+	graph.subject('air').dependOn('human'); // this is illegal!
 	=> Error: Cyclic Dependency Detected
 	
 	// same happens with sub dependencies
-	graph.subject('air').dependsOn('oxygen');
-	graph.subject('oxygen').dependsOn('human'); // still illegal!
+	graph.subject('air').dependOn('oxygen');
+	graph.subject('oxygen').dependOn('human'); // still illegal!
 	=> Error: Cyclic Dependency Detected
 
 ### Tests

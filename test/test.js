@@ -10,7 +10,7 @@ vows.describe('dg.js').addBatch({
   "When I add 'drug' as a dependency of 'human'": {
     topic: function() {
       var graph = new DependencyGraph();
-      graph.subject('human').dependsOn('drug');
+      graph.subject('human').dependOn('drug');
       return graph;
     },
     "Then the node 'human'": {
@@ -41,12 +41,12 @@ vows.describe('dg.js').addBatch({
   "When I have a dependency already established": {
     topic: function() {
       var graph = new DependencyGraph();
-      graph.subject('human').dependsOn('drug');
+      graph.subject('human').dependOn('drug');
       return graph;
     },
     "And I repeat the call that adds the dependency": {
       topic: function(graph) {
-        return graph.subject('human').dependsOn('drug');
+        return graph.subject('human').dependOn('drug');
       },
       "Then the dependency should not be repeated": function(human) {
         assert.deepEqual(human.dependencies, ['drug']);
@@ -56,7 +56,7 @@ vows.describe('dg.js').addBatch({
   "When I add 'drug', 'air' and 'food' dependencies of 'human'": {
     topic: function() {
       var graph = new DependencyGraph();
-      return graph.subject('human').dependsOn('drug').dependsOn('air').dependsOn('food');
+      return graph.subject('human').dependOn('drug').dependOn('air').dependOn('food');
     },
     "Then all the dependencies should be listed as dependencies": function(human) {
       assert.deepEqual(human.dependencies, ['drug', 'air', 'food']);
@@ -77,9 +77,9 @@ vows.describe('dg.js').addBatch({
     topic: function() {
       var graph = new DependencyGraph();
       // we add another dependencies to 'air' so we check that 'drop' only removes 'human' references of 'air'
-      graph.subject('plant').dependsOn('air');
-      graph.subject('animal').dependsOn('air');
-      return graph.subject('human').dependsOn('drug').dependsOn('air').dependsOn('food');
+      graph.subject('plant').dependOn('air');
+      graph.subject('animal').dependOn('air');
+      return graph.subject('human').dependOn('drug').dependOn('air').dependOn('food');
     },
     "If then I remove 'air' and 'drug'": {
       topic: function(human) {
@@ -110,11 +110,11 @@ vows.describe('dg.js').addBatch({
   "When I serialize a graph with nodes": {
     topic: function() {
       var graph = new DependencyGraph();
-      graph.subject('air').dependsOn("oxigen");
-      graph.subject('air').dependsOn("hidrogen");
-      graph.subject('human').dependsOn("air");
-      graph.subject('fire').dependsOn("oxigen");
-      graph.subject('animal').dependsOn("air");
+      graph.subject('air').dependOn("oxigen");
+      graph.subject('air').dependOn("hidrogen");
+      graph.subject('human').dependOn("air");
+      graph.subject('fire').dependOn("oxigen");
+      graph.subject('animal').dependOn("air");
       return graph.serialize();
     },
     "The serialized graph state should be an object with properties per each node with sub properties dps and refs only": function(data) {
@@ -167,14 +167,14 @@ vows.describe('dg.js').addBatch({
   "Having a graph with multiple nested references": {
     topic: function() {
       var graph = new DependencyGraph();
-      graph.subject('B.first').dependsOn('A');
-      graph.subject('B.middle').dependsOn('A');
-      graph.subject('B.last').dependsOn('A');
-      graph.subject('C').dependsOn('B.first');
-      graph.subject('C').dependsOn('B.middle');
-      graph.subject('C').dependsOn('B.last');
-      graph.subject('D').dependsOn('B');
-      graph.subject('D').dependsOn('C');
+      graph.subject('B.first').dependOn('A');
+      graph.subject('B.middle').dependOn('A');
+      graph.subject('B.last').dependOn('A');
+      graph.subject('C').dependOn('B.first');
+      graph.subject('C').dependOn('B.middle');
+      graph.subject('C').dependOn('B.last');
+      graph.subject('D').dependOn('B');
+      graph.subject('D').dependOn('C');
       return graph;
     },
     "allReferences should return all the references in the right order and with unique elements": function(graph){
@@ -184,14 +184,14 @@ vows.describe('dg.js').addBatch({
   "Having a graph with multiple nested dependencies": {
     topic: function() {
       var graph = new DependencyGraph();
-      graph.subject('B.first').dependsOn('A');
-      graph.subject('B.middle').dependsOn('A');
-      graph.subject('B.last').dependsOn('A');
-      graph.subject('C').dependsOn('B.first');
-      graph.subject('C').dependsOn('B.middle');
-      graph.subject('C').dependsOn('B.last');
-      graph.subject('D').dependsOn('B');
-      graph.subject('D').dependsOn('C');
+      graph.subject('B.first').dependOn('A');
+      graph.subject('B.middle').dependOn('A');
+      graph.subject('B.last').dependOn('A');
+      graph.subject('C').dependOn('B.first');
+      graph.subject('C').dependOn('B.middle');
+      graph.subject('C').dependOn('B.last');
+      graph.subject('D').dependOn('B');
+      graph.subject('D').dependOn('C');
       return graph;
     },
     "allReferences should return all the references in the right order and with unique elements": function(graph){
@@ -205,10 +205,10 @@ vows.describe('dg.js').addBatch({
     },
     "Then I should receive an error with message 'Cyclic Dependency Detected'": function(graph) {
       assert.throws(function() {
-        graph.subject('B').dependsOn('B');
+        graph.subject('B').dependOn('B');
       });
       try {
-        graph.subject('B').dependsOn('B');
+        graph.subject('B').dependOn('B');
       } catch(e) {
         assert.equal(e.message, 'Cyclic Dependency Detected');
       }
@@ -217,21 +217,21 @@ vows.describe('dg.js').addBatch({
   "If I try to add a dependency to the same node in a sub-dependency": {
     topic: function() {
       var graph = new DependencyGraph();
-        graph.subject('B').dependsOn('A');
+        graph.subject('B').dependOn('A');
       return graph;
     },
     "Then I should receive an error with message 'Cyclic Dependency Detected'": function(graph) {
       assert.throws(function() {
-        graph.subject('A').dependsOn('B');
+        graph.subject('A').dependOn('B');
       });
       try {
-        graph.subject('A').dependsOn('B');
+        graph.subject('A').dependOn('B');
       } catch(e) {
         assert.equal(e.message, 'Cyclic Dependency Detected');
       }
-      graph.subject('C').dependsOn('B');
+      graph.subject('C').dependOn('B');
       assert.throws(function() {
-        graph.subject('A').dependsOn('C');
+        graph.subject('A').dependOn('C');
       });
     }
   },
