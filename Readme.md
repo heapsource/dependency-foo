@@ -1,6 +1,8 @@
 ## dependency-foo
 
-dependency-foo is a stupid-proof Node.js module that implements a General Purpose [Dependency Graph](http://en.wikipedia.org/wiki/Dependency_graph).
+dependency-foo is a stupid-proof Node.js module that implements a simple Directed Acyclic Graph(DAG)
+
+![Dependency Graph Example](http://upload.wikimedia.org/wikipedia/commons/a/ad/Dependencygraph.png)
 
 ### Features
 
@@ -56,11 +58,65 @@ dependency-foo is a stupid-proof Node.js module that implements a General Purpos
 	graph.subject('air').references
 	=> []
 
+#### State and Serialization
+
+Every instance of `DependencyGraph` has an internal state that can be accessed by the `state` property, which returns a JSON safe object that maintains the state of all the nodes of the graph:
+
+	graph.state
+	=> {
+		human: {
+			dps: [ 'air' ],
+			refs: []
+		},
+	  	air: {
+			dps: [],
+			refs: [ 'human' ]
+		}
+	}
+
+
+The state of the graph can be replaced safely with another object:
+
+	graph.state = {} // clear all the nodes of the graph
+
+The state of the graph can be serialized to JSON using the `serialize` method.
+	
+	graph.serialize()
+	=> {"human":{"dps":["air"],"refs":[]},"air":{"dps":[],"refs":["human"]}}
+	
+To restore the state, you can create another instance of the graph:
+
+	graph = new DependencyGraph(JSON.parse('{"human":{"dps":["air"],"refs":[]},"air":{"dps":[],"refs":["human"]}}'))
+
+Or assigning the `state` property.
+	
+	graph.state = JSON.parse('{"human":{"dps":["air"],"refs":[]},"air":{"dps":[],"refs":["human"]}}')
+
+#### Cyclic Dependency Detection
+
+dependency-foo will check for cyclic dependencies in the input.
+
+	graph.subject('human').dependsOn('air');
+	graph.subject('air').dependsOn('human'); // this is illegal!
+	=> Error: Cyclic Dependency Detected
+	
+	// same happens with sub dependencies
+	graph.subject('air').dependsOn('oxygen');
+	graph.subject('oxygen').dependsOn('human'); // still illegal!
+	=> Error: Cyclic Dependency Detected
 
 ### Tests
 
     npm test
 
+
+## Disclaimer
+
+Our needs for this module were very specific and we never intended to handle high volume of nodes(1k or more). If you find that this module doesn't fill your performance expectation then you have at least three choices:
+
+1. Improve this module *without breaking the tests and keeping existing method signatures* via making pull requests.
+2. Fork this module.
+3. Implement your own dependency graph from scratch.
 
 ## License (MIT)
 

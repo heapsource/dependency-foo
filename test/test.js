@@ -163,5 +163,76 @@ vows.describe('dg.js').addBatch({
     "I should be able to perform operations normally": function(graph){
       assert.isTrue(graph.subject('air').isDependencyOf('animal'));
     }
+  },
+  "Having a graph with multiple nested references": {
+    topic: function() {
+      var graph = new DependencyGraph();
+      graph.subject('B.first').dependsOn('A');
+      graph.subject('B.middle').dependsOn('A');
+      graph.subject('B.last').dependsOn('A');
+      graph.subject('C').dependsOn('B.first');
+      graph.subject('C').dependsOn('B.middle');
+      graph.subject('C').dependsOn('B.last');
+      graph.subject('D').dependsOn('B');
+      graph.subject('D').dependsOn('C');
+      return graph;
+    },
+    "allReferences should return all the references in the right order and with unique elements": function(graph){
+      assert.deepEqual(graph.subject('A').allReferences, ['B.first','B.middle', 'B.last', 'C', 'D']);
+    }
+  },
+  "Having a graph with multiple nested dependencies": {
+    topic: function() {
+      var graph = new DependencyGraph();
+      graph.subject('B.first').dependsOn('A');
+      graph.subject('B.middle').dependsOn('A');
+      graph.subject('B.last').dependsOn('A');
+      graph.subject('C').dependsOn('B.first');
+      graph.subject('C').dependsOn('B.middle');
+      graph.subject('C').dependsOn('B.last');
+      graph.subject('D').dependsOn('B');
+      graph.subject('D').dependsOn('C');
+      return graph;
+    },
+    "allReferences should return all the references in the right order and with unique elements": function(graph){
+      assert.deepEqual(graph.subject('D').allDependencies, ['B', 'C', 'B.first','B.middle', 'B.last', 'A']);
+    }
+  },
+  "If I try to add a dependency to the same node": {
+    topic: function() {
+      var graph = new DependencyGraph();
+      return graph;
+    },
+    "Then I should receive an error with message 'Cyclic Dependency Detected'": function(graph) {
+      assert.throws(function() {
+        graph.subject('B').dependsOn('B');
+      });
+      try {
+        graph.subject('B').dependsOn('B');
+      } catch(e) {
+        assert.equal(e.message, 'Cyclic Dependency Detected');
+      }
+    }
+  },
+  "If I try to add a dependency to the same node in a sub-dependency": {
+    topic: function() {
+      var graph = new DependencyGraph();
+        graph.subject('B').dependsOn('A');
+      return graph;
+    },
+    "Then I should receive an error with message 'Cyclic Dependency Detected'": function(graph) {
+      assert.throws(function() {
+        graph.subject('A').dependsOn('B');
+      });
+      try {
+        graph.subject('A').dependsOn('B');
+      } catch(e) {
+        assert.equal(e.message, 'Cyclic Dependency Detected');
+      }
+      graph.subject('C').dependsOn('B');
+      assert.throws(function() {
+        graph.subject('A').dependsOn('C');
+      });
+    }
   }
 }).run();
