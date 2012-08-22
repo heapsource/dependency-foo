@@ -38,6 +38,8 @@ dependency-foo is a stupid-proof Node.js module that implements a simple Directe
 
 #### Inspecting Dependencies
 
+Use `references` and `dependencies` to get near references or dependencies:
+
     // What nodes are referencing 'air' as a dependency?
 	graph.subject('air').references
 	=> ['human']
@@ -45,6 +47,8 @@ dependency-foo is a stupid-proof Node.js module that implements a simple Directe
 	// What nodes are dependencies of 'human'?
 	graph.subject('human').dependencies
 	=> ['air']
+
+Use `allReferences` and `allDependencies` to get all the the related references or dependencies in the graph.
 
 #### Removing a Dependency
 
