@@ -1,0 +1,24 @@
+{
+  "author": "Firebase.co <npm@firebase.co> (http://www.firebase.co/)",
+  "name": "dependency-foo",
+  "description": "Serializable General Purpose Dependency Graph",
+  "keywords": "Dependency, Tree, Graph, Nodes, Serializable",
+  "version": "0.1.0",
+  "homepage": "http://www.firebase.co",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/firebaseco/dependency-foo.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vows": "0.6.x"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
