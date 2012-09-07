@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/firebaseco/dependency-foo.png)](http://travis-ci.org/firebaseco/dependency-foo)
 ## dependency-foo
 
 dependency-foo is a stupid-proof Node.js module that implements a simple Directed Acyclic Graph(DAG)
